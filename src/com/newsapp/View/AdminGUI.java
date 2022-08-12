@@ -6,6 +6,8 @@ import com.newsapp.Model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AdminGUI extends JFrame {
 
@@ -22,7 +24,7 @@ public class AdminGUI extends JFrame {
     private JTextField fldUserPassword;
     private JPanel pnlUserAdd;
     private JLabel lblUserUType;
-    private JComboBox comboBox1;
+    private JComboBox cmbUserType;
     private JButton btnUserAdd;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
@@ -61,6 +63,22 @@ public class AdminGUI extends JFrame {
         loadUserModel();
         tblUsers.setModel(mdlUserList);
         tblUsers.getTableHeader().setReorderingAllowed(false);
+
+        // add user button
+        btnUserAdd.addActionListener(e -> {
+            if(Helper.isFieldEmpty(fldUserFullName) || Helper.isFieldEmpty(fldUserPassword) || Helper.isFieldEmpty(fldUserUName)
+            || cmbUserType.getSelectedItem().equals("")){
+                System.out.println("Please fill all the fields.");
+            }
+            else{
+                User u = new User(fldUserFullName.getText(),fldUserUName.getText(),fldUserPassword.getText(),
+                        cmbUserType.getSelectedItem().toString());
+                User.add(u);
+                loadUserModel();
+                Helper.clearFields(fldUserFullName,fldUserUName,fldUserPassword);
+                cmbUserType.setSelectedItem("");
+            }
+        });
     }
 
     public void loadUserModel(){

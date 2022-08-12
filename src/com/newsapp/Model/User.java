@@ -2,6 +2,7 @@ package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,6 +20,13 @@ public class User {
     }
     public User(int id, String name, String userName, String password, String userType) {
         this.id = id;
+        this.name = name;
+        this.userName = userName;
+        this.password = password;
+        this.userType = userType;
+    }
+
+    public User(String name, String userName, String password, String userType) {
         this.name = name;
         this.userName = userName;
         this.password = password;
@@ -85,5 +93,21 @@ public class User {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static boolean add(User user){
+        String query = "INSERT INTO public.user (name, user_name, pass, user_type) VALUES (?,?,?,CAST(? AS user_types))";
+
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            pr.setString(1,user.getName());
+            pr.setString(2,user.getUserName());
+            pr.setString(3,user.getPassword());
+            pr.setString(4,user.getUserType());
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

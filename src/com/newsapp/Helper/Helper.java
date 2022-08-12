@@ -1,5 +1,6 @@
 package com.newsapp.Helper;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Helper {
@@ -17,5 +18,20 @@ public class Helper {
                 point = 0;
         }
         return point;
+    }
+
+    public static boolean isFieldEmpty(JTextField field){
+        if(field.getText().length()==0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static void clearFields(JTextField... args){
+        for(JTextField field: args){
+            field.setText("");
+        }
     }
 }
