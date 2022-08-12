@@ -43,7 +43,6 @@ public class AdminGUI extends JFrame {
 
 
     public static void main(String[] args) {
-        Admin admin = new Admin(1,"Furkan Uçar","Furkan","qwdqwd","admin");
-        AdminGUI adminGUI = new AdminGUI(admin);
+
     }
 }
