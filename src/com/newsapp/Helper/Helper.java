@@ -34,4 +34,31 @@ public class Helper {
             field.setText("");
         }
     }
+
+    public static void showMessage(String message){
+        String msg = "";
+        switch(message){
+            case "fill":
+                msg = "Please fill all the fields.";
+                break;
+            case "done":
+                msg = "Operation successfully completed!";
+                break;
+            case "error":
+                msg = "Something wrong happened.";
+                break;
+            default:
+                msg = message;
+        }
+        JOptionPane.showMessageDialog(null,msg,"Information",JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void fillField(JTextField field, String fill){
+        field.setText(fill);
+    }
+
+    public static void fillField(JComboBox box, String fill){
+        box.setSelectedItem(fill);
+    }
+
 }

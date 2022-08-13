@@ -1,6 +1,7 @@
 package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
+import com.newsapp.Helper.Helper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -97,14 +98,33 @@ public class User {
 
     public static boolean add(User user){
         String query = "INSERT INTO public.user (name, user_name, pass, user_type) VALUES (?,?,?,CAST(? AS user_types))";
+        if(!User.getFetch(user)){
+            return false;
+        }
+        else{
+            try {
+                PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+                pr.setString(1,user.getName());
+                pr.setString(2,user.getUserName());
+                pr.setString(3,user.getPassword());
+                pr.setString(4,user.getUserType());
+                return pr.executeUpdate() != -1;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
 
+    public static boolean getFetch(User user){
+        String query = "SELECT * FROM public.user WHERE user_name=?";
         try {
             PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
-            pr.setString(1,user.getName());
-            pr.setString(2,user.getUserName());
-            pr.setString(3,user.getPassword());
-            pr.setString(4,user.getUserType());
-            return pr.executeUpdate() != -1;
+            pr.setString(1,user.getUserName());
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
