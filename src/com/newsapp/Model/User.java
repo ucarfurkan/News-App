@@ -154,6 +154,38 @@ public class User {
         return false;
     }
 
+    public static String searchQuery(String name, String uname, String user_type){
+        String query = "SELECT * FROM public.user WHERE user_name LIKE '%{{uname}}%' AND name LIKE '%{{name}}%'";
+        query = query.replace("{{uname}}",uname);
+        query = query.replace("{{name}}",name);
+        if(!user_type.isEmpty()){
+            query += " AND user_type='{{user_type}}'";
+            query = query.replace("{{user_type}}",user_type);
+        }
+        return query;
+    }
+
+    public static ArrayList<User> searchUserList(String query){
+        ArrayList<User> userList = new ArrayList<>();
+        User obj;
+        try {
+            Statement st = DatabaseConnector.getInstance().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUserName(rs.getString("user_name"));
+                obj.setPassword(rs.getString("pass"));
+                obj.setUserType(rs.getString("user_type"));
+                userList.add(obj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
+
 
     public static boolean getFetch(User user){
         String query = "SELECT * FROM public.user WHERE user_name=?";

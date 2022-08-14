@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class AdminGUI extends JFrame {
 
@@ -34,6 +35,14 @@ public class AdminGUI extends JFrame {
     private JScrollPane scrl;
     private JPanel fldUsers;
     private JTextField fldUserId;
+    private JPanel pnlUserSearch;
+    private JPanel pnlUserNameSrch;
+    private JPanel pnlUserUnameSrch;
+    private JPanel pnlUserTypeSrch;
+    private JTextField fldUserNameSrch;
+    private JTextField fldUserUnameSrch;
+    private JComboBox cmbUserTypeSrch;
+    private JButton btnUserSrch;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
 
@@ -173,6 +182,16 @@ public class AdminGUI extends JFrame {
                 loadUserModel();
             }
         });
+
+        // user search button
+        btnUserSrch.addActionListener(e -> {
+                String name = fldUserNameSrch.getText();
+                String uName = fldUserUnameSrch.getText();
+                String userType = cmbUserTypeSrch.getSelectedItem().toString();
+                String query = User.searchQuery(name,uName,userType);
+                ArrayList<User> searchingUser = User.searchUserList(query);
+                loadUserModel(searchingUser);
+        });
     }
 
     public void loadUserModel(){
@@ -180,6 +199,20 @@ public class AdminGUI extends JFrame {
         clearModel.setRowCount(0);
 
         for(User user: User.getList()){
+            rowUserList[0] = user.getId();
+            rowUserList[1] = user.getName();
+            rowUserList[2] = user.getUserName();
+            rowUserList[3] = user.getPassword();
+            rowUserList[4] = user.getUserType();
+            mdlUserList.addRow(rowUserList);
+        }
+    }
+
+    public void loadUserModel(ArrayList<User> list){
+        DefaultTableModel clearModel = (DefaultTableModel) tblUsers.getModel();
+        clearModel.setRowCount(0);
+
+        for(User user: list){
             rowUserList[0] = user.getId();
             rowUserList[1] = user.getName();
             rowUserList[2] = user.getUserName();
