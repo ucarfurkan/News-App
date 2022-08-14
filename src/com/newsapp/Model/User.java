@@ -3,6 +3,7 @@ package com.newsapp.Model;
 import com.newsapp.Helper.DatabaseConnector;
 import com.newsapp.Helper.Helper;
 
+import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -116,6 +117,44 @@ public class User {
         return true;
     }
 
+    public static boolean update(User u) {
+        String query = "UPDATE public.user SET name=?, user_name=?, pass=?, user_type=CAST(? AS user_types) WHERE id=?";
+
+        if(!User.updateUserFetch(u) && !User.getFetch(u)){
+                return false;
+        }
+        else{
+            try {
+                PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+                pr.setString(1,u.getName());
+                pr.setString(2,u.getUserName());
+                pr.setString(3,u.getPassword());
+                pr.setString(4,u.getUserType());
+                pr.setInt(5,u.getId());
+                return pr.executeUpdate() != -1;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    public static boolean delete(User u) {
+        String query = "DELETE FROM public.user WHERE id=? AND user_name=?";
+        if(User.updateUserFetch(u)){
+            try {
+                PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+                pr.setInt(1,u.getId());
+                pr.setString(2,u.getUserName());
+                return pr.executeUpdate() != -1;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+
     public static boolean getFetch(User user){
         String query = "SELECT * FROM public.user WHERE user_name=?";
         try {
@@ -130,4 +169,22 @@ public class User {
         }
         return true;
     }
+
+    public static boolean updateUserFetch(User user){
+        String query = "SELECT * FROM public.user WHERE EXISTS (SELECT * FROM public.user WHERE user_name=? AND id=?)";
+
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            pr.setString(1,user.getUserName());
+            pr.setInt(2,user.getId());
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

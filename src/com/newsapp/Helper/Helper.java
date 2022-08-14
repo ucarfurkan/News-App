@@ -47,6 +47,9 @@ public class Helper {
             case "error":
                 msg = "Something wrong happened.";
                 break;
+            case "usedUname":
+                msg = "This username is used.";
+                break;
             default:
                 msg = message;
         }

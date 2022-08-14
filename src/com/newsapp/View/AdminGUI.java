@@ -7,6 +7,8 @@ import com.newsapp.Model.User;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -31,6 +33,7 @@ public class AdminGUI extends JFrame {
     private JButton btnUserDelete;
     private JScrollPane scrl;
     private JPanel fldUsers;
+    private JTextField fldUserId;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
 
@@ -86,12 +89,12 @@ public class AdminGUI extends JFrame {
                     Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword);
                     cmbUserType.setSelectedItem("");
                 } else {
-                    Helper.showMessage("This username is used.");
+                    Helper.showMessage("usedUname");
                 }
             }
         });
 
-        // right click on table
+        // click on table
         tblUsers.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -109,22 +112,65 @@ public class AdminGUI extends JFrame {
                     String userName = tblUsers.getModel().getValueAt(rowIndex,2).toString();
                     String password = tblUsers.getModel().getValueAt(rowIndex,3).toString();
                     String userType = tblUsers.getModel().getValueAt(rowIndex,4).toString();
+                    String userID = tblUsers.getModel().getValueAt(rowIndex,0).toString();
 
+                    Helper.fillField(fldUserId,userID);
                     Helper.fillField(fldUserFullName,name);
                     Helper.fillField(fldUserUName,userName);
                     Helper.fillField(fldUserPassword,password);
                     Helper.fillField(cmbUserType,userType);
-                    btnUserAdd.setEnabled(false);
                     btnUserUpdate.setEnabled(true);
                     btnUserDelete.setEnabled(true);
                 }
                 else{
-                    Helper.clearFields(fldUserFullName,fldUserUName,fldUserPassword);
+                    Helper.clearFields(fldUserFullName,fldUserUName,fldUserPassword,fldUserId);
                     cmbUserType.setSelectedItem("");
-                    btnUserAdd.setEnabled(true);
                     btnUserUpdate.setEnabled(false);
                     btnUserDelete.setEnabled(false);
                 }
+            }
+        });
+
+        // update user button
+        btnUserUpdate.addActionListener(e -> {
+            if(Helper.isFieldEmpty(fldUserFullName) || Helper.isFieldEmpty(fldUserPassword) || Helper.isFieldEmpty(fldUserUName)
+                    || cmbUserType.getSelectedItem().equals("")){
+                Helper.showMessage("fill");
+            }
+            else {
+                User u = new User(Integer.valueOf(fldUserId.getText()),fldUserFullName.getText(), fldUserUName.getText(), fldUserPassword.getText(),
+                        cmbUserType.getSelectedItem().toString());
+
+                if (User.update(u)) {
+                    Helper.showMessage("done");
+                    Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword,fldUserId);
+                    cmbUserType.setSelectedItem("");
+                }
+                else{
+                    Helper.showMessage("usedUname");
+                }
+                loadUserModel();
+            }
+        });
+
+        // delete user button
+        btnUserDelete.addActionListener(e -> {
+            if(Helper.isFieldEmpty(fldUserFullName) || Helper.isFieldEmpty(fldUserPassword) || Helper.isFieldEmpty(fldUserUName)
+                    || cmbUserType.getSelectedItem().equals("")){
+                Helper.showMessage("fill");
+            }
+            else{
+                User u = new User(Integer.valueOf(fldUserId.getText()),fldUserFullName.getText(), fldUserUName.getText(), fldUserPassword.getText(),
+                        cmbUserType.getSelectedItem().toString());
+                if(User.delete(u)){
+                    Helper.showMessage("done");
+                    Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword,fldUserId);
+                    cmbUserType.setSelectedItem("");
+                }
+                else{
+                    Helper.showMessage("Username and id do not match. Update first or undo the changes.");
+                }
+                loadUserModel();
             }
         });
     }
