@@ -32,8 +32,7 @@ public class AdminGUI extends JFrame {
     private JButton btnUserAdd;
     private JButton btnUserUpdate;
     private JButton btnUserDelete;
-    private JScrollPane scrl;
-    private JPanel fldUsers;
+    private JPanel pnlUsers;
     private JTextField fldUserId;
     private JPanel pnlUserSearch;
     private JPanel pnlUserNameSrch;
@@ -43,6 +42,10 @@ public class AdminGUI extends JFrame {
     private JTextField fldUserUnameSrch;
     private JComboBox cmbUserTypeSrch;
     private JButton btnUserSrch;
+    private JTable tblNews;
+    private JPanel pnlNews;
+    private JScrollPane scrlNews;
+    private JPanel pnlBottom;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
 
