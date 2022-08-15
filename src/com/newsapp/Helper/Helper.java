@@ -1,6 +1,7 @@
 package com.newsapp.Helper;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class Helper {
@@ -63,5 +64,6 @@ public class Helper {
     public static void fillField(JComboBox box, String fill){
         box.setSelectedItem(fill);
     }
+
 
 }

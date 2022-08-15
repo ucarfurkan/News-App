@@ -2,6 +2,7 @@ package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
 import com.newsapp.Model.Admin;
+import com.newsapp.Model.News;
 import com.newsapp.Model.User;
 
 import javax.swing.*;
@@ -16,9 +17,6 @@ import java.util.ArrayList;
 public class AdminGUI extends JFrame {
 
     private JPanel wrapper;
-    private JPanel pnlTop;
-    private JLabel lblWelcome;
-    private JButton btnExit;
     private JTabbedPane tabAdmin;
     private JTable tblUsers;
     private JLabel lblUserFullName;
@@ -46,8 +44,13 @@ public class AdminGUI extends JFrame {
     private JPanel pnlNews;
     private JScrollPane scrlNews;
     private JPanel pnlBottom;
+    private JScrollPane scrlUsers;
+    private JButton btnExit;
+    private JLabel lblWelcomed;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
+    private DefaultTableModel mdlNewsList;
+    private Object[] rowNewsList;
 
 
     private final Admin admin;
@@ -64,16 +67,13 @@ public class AdminGUI extends JFrame {
         setTitle("NEWS");
         setVisible(true);
 
-        lblWelcome.setText("Welcome, " + admin.getName());
+        lblWelcomed.setText("Welcome, " + admin.getName());
 
         // ModelUserList
         mdlUserList = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int column) {
-                if(column == 0){
-                    return false;
-                }
-                return super.isCellEditable(row, column);
+                return false;
             }
         };
 
@@ -85,6 +85,26 @@ public class AdminGUI extends JFrame {
         tblUsers.getTableHeader().setReorderingAllowed(false);
         tblUsers.getColumnModel().getColumn(0).setMaxWidth(75);
         tblUsers.getColumnModel().getColumn(4).setMaxWidth(100);
+
+        // NewsUserList
+        mdlNewsList = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        Object[] colNewsList = {"ID","Writer ID","Category ID","Headline","Text","Like Count"};
+        mdlNewsList.setColumnIdentifiers(colNewsList);
+        rowNewsList = new Object[colNewsList.length];
+        loadNewsModel();
+        tblNews.setModel(mdlNewsList);
+        tblNews.getTableHeader().setReorderingAllowed(false);
+        tblNews.getColumnModel().getColumn(0).setMaxWidth(75);
+        tblNews.getColumnModel().getColumn(1).setMaxWidth(75);
+        tblNews.getColumnModel().getColumn(2).setMaxWidth(75);
+        tblNews.getColumnModel().getColumn(5).setMaxWidth(75);
+
 
         // add user button
         btnUserAdd.addActionListener(e -> {
@@ -197,6 +217,7 @@ public class AdminGUI extends JFrame {
         });
     }
 
+    // loadUserModel
     public void loadUserModel(){
         DefaultTableModel clearModel = (DefaultTableModel) tblUsers.getModel();
         clearModel.setRowCount(0);
@@ -222,6 +243,22 @@ public class AdminGUI extends JFrame {
             rowUserList[3] = user.getPassword();
             rowUserList[4] = user.getUserType();
             mdlUserList.addRow(rowUserList);
+        }
+    }
+
+    // load news model
+    public void loadNewsModel(){
+        DefaultTableModel clearModel = (DefaultTableModel) tblNews.getModel();
+        clearModel.setRowCount(0);
+
+        for(News news : News.getList()){
+            rowNewsList[0] = news.getId();
+            rowNewsList[1] = news.getWriterId();
+            rowNewsList[2] = news.getCategoryId();
+            rowNewsList[3] = news.getHeadline();
+            rowNewsList[4] = news.getText();
+            rowNewsList[5] = news.getLikeCount();
+            mdlNewsList.addRow(rowNewsList);
         }
     }
 
