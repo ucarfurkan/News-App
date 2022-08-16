@@ -2,6 +2,7 @@ package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
 import com.newsapp.Model.Admin;
+import com.newsapp.Model.Category;
 import com.newsapp.Model.News;
 import com.newsapp.Model.User;
 
@@ -49,10 +50,19 @@ public class AdminGUI extends JFrame {
     private JLabel lblWelcomed;
     private JTextField fldNewsIdDelete;
     private JButton btnNewsDelete;
+    private JPanel pnlCategories;
+    private JTable tblCategories;
+    private JScrollPane scrlCategories;
+    private JTextField fldCategoryId;
+    private JTextField fldCategoryName;
+    private JButton btnCategoryAdd;
+    private JButton btnCategoryDelete;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
     private DefaultTableModel mdlNewsList;
     private Object[] rowNewsList;
+    private DefaultTableModel mdlCategoryList;
+    private Object[] rowCategoryList;
 
 
     private final Admin admin;
@@ -87,8 +97,9 @@ public class AdminGUI extends JFrame {
         tblUsers.getTableHeader().setReorderingAllowed(false);
         tblUsers.getColumnModel().getColumn(0).setMaxWidth(75);
         tblUsers.getColumnModel().getColumn(4).setMaxWidth(100);
+        Helper.centerCells(tblUsers);
 
-        // NewsUserList
+        // ModelNewsList
         mdlNewsList = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -106,6 +117,23 @@ public class AdminGUI extends JFrame {
         tblNews.getColumnModel().getColumn(1).setMaxWidth(75);
         tblNews.getColumnModel().getColumn(2).setMaxWidth(75);
         tblNews.getColumnModel().getColumn(5).setMaxWidth(75);
+        Helper.centerCells(tblNews);
+
+        // ModelCategoryList
+        mdlCategoryList = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        Object[] colCategoryList = {"ID","Category Name","News Count"};
+        mdlCategoryList.setColumnIdentifiers(colCategoryList);
+        rowCategoryList = new Object[colCategoryList.length];
+        loadCategoryModel();
+        tblCategories.setModel(mdlCategoryList);
+        tblCategories.getTableHeader().setReorderingAllowed(false);
+        Helper.centerCells(tblCategories);
 
 
         // add user button
@@ -196,13 +224,15 @@ public class AdminGUI extends JFrame {
             else{
                 User u = new User(Integer.valueOf(fldUserId.getText()),fldUserFullName.getText(), fldUserUName.getText(), fldUserPassword.getText(),
                         cmbUserType.getSelectedItem().toString());
-                if(User.delete(u)){
-                    Helper.showMessage("done");
-                    Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword,fldUserId);
-                    cmbUserType.setSelectedItem("");
-                }
-                else{
-                    Helper.showMessage("Username and id do not match. Update first or undo the changes.");
+                if(Helper.confirm("sure")){
+                    if(User.delete(u)){
+                        Helper.showMessage("done");
+                        Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword,fldUserId);
+                        cmbUserType.setSelectedItem("");
+                    }
+                    else{
+                        Helper.showMessage("Username and id do not match. Update first or undo the changes.");
+                    }
                 }
                 loadUserModel();
             }
@@ -307,6 +337,18 @@ public class AdminGUI extends JFrame {
             rowNewsList[4] = news.getText();
             rowNewsList[5] = news.getLikeCount();
             mdlNewsList.addRow(rowNewsList);
+        }
+    }
+
+    // load category model
+    public void loadCategoryModel(){
+        DefaultTableModel clearModel = (DefaultTableModel) tblCategories.getModel();
+        clearModel.setRowCount(0);
+
+        for(Category category : Category.getList()){
+            rowCategoryList[0] = category.getId();
+            rowCategoryList[1] = category.getName();
+            mdlCategoryList.addRow(rowCategoryList);
         }
     }
 
