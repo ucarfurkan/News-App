@@ -236,28 +236,4 @@ public class User {
         }
         return false;
     }
-
-    public static String getWriterName(int writerId){
-        String query = "SELECT * FROM public.user WHERE id="+writerId;
-        User obj;
-        String name = "";
-        try {
-            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
-            ResultSet rs = pr.executeQuery();
-            if (rs.next()){
-                obj = new User();
-                obj.setId(rs.getInt("id"));
-                obj.setName(rs.getString("name"));
-                obj.setUserName(rs.getString("user_name"));
-                obj.setPassword(rs.getString("pass"));
-                obj.setUserType(rs.getString("user_type"));
-                name = obj.getName();
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return name;
-    }
-
 }

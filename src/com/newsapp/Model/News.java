@@ -1,7 +1,9 @@
 package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
+import com.newsapp.View.AdminGUI;
 
+import javax.swing.*;
 import javax.swing.plaf.nimbus.State;
 import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
@@ -132,6 +134,61 @@ public class News {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public static void updateCategoryCombo(JComboBox comboBox){
+        String query = "SELECT * FROM category";
+
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            while(rs.next()){
+                comboBox.addItem(rs.getString("name"));
+            }
+            rs.close();
+            pr.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String searchQuery(String writerId,String category, String headline, String text){
+        String query = "SELECT * FROM news WHERE headline LIKE '%{{headline}}%' AND text LIKE '%{{text}}%'";
+        query = query.replace("{{writerId}}",writerId);
+        query = query.replace("{{headline}}",headline);
+        query = query.replace("{{text}}",text);
+        if(!category.isEmpty()){
+            int categoryId = Category.getCategoryId(category);
+            query += " AND category_id="+categoryId;
+        }
+        if(!writerId.isEmpty()){
+            query += " AND writer_id="+writerId;
+        }
+        return query;
+    }
+
+    public static ArrayList<News> searchNewsList(String query){
+        ArrayList<News> newsList = new ArrayList<>();
+        News obj;
+        try {
+            Statement st = DatabaseConnector.getInstance().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                obj = new News();
+                obj.setId(rs.getInt("id"));
+                obj.setWriterId(rs.getInt("writer_id"));
+                obj.setCategoryId(rs.getInt("category_id"));
+                obj.setHeadline(rs.getString("headline"));
+                obj.setText(rs.getString("text"));
+                obj.setLikeCount(rs.getInt("like_count"));
+                newsList.add(obj);
+            }
+            st.close();
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return newsList;
     }
 
 }

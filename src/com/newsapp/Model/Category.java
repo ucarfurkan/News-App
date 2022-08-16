@@ -138,4 +138,21 @@ public class Category {
         }
         return true;
     }
+
+    public static int getCategoryId(String categoryName){
+        String query = "SELECT * FROM category WHERE name='"+categoryName+"'";
+        int id=0;
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                id = rs.getInt("id");
+            }
+            rs.close();
+            pr.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
 }

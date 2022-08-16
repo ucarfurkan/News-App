@@ -85,7 +85,6 @@ public class AdminGUI extends JFrame {
         setTitle("NEWS");
         setVisible(true);
 
-        lblWelcomed.setText("Welcome, " + admin.getName());
 
         // ModelUserList
         mdlUserList = new DefaultTableModel(){
@@ -113,7 +112,7 @@ public class AdminGUI extends JFrame {
             }
         };
 
-        Object[] colNewsList = {"ID","Writer Name","Category ID","Headline","Text","Like Count"};
+        Object[] colNewsList = {"ID","Writer ID","Category ID","Headline","Text","Like Count"};
         mdlNewsList.setColumnIdentifiers(colNewsList);
         rowNewsList = new Object[colNewsList.length];
         loadNewsModel();
@@ -373,6 +372,22 @@ public class AdminGUI extends JFrame {
                 loadCategoryModel();
             }
         });
+
+        // news search button
+        btnNewsSrch.addActionListener(e -> {
+            String name = fldWriterNameSrch.getText();
+            String headline = fldHeadlineSrch.getText();
+            String text = fldTextSrch.getText();
+            String category = cmbCategorySrch.getSelectedItem().toString();
+            String query = News.searchQuery(name,category,headline,text);
+            ArrayList<News> searchingNews = News.searchNewsList(query);
+            loadNewsModel(searchingNews);
+        });
+
+        // exit button
+        btnExit.addActionListener(e -> {
+            dispose();
+        });
     }
 
     // loadUserModel
@@ -411,7 +426,22 @@ public class AdminGUI extends JFrame {
 
         for(News news : News.getList()){
             rowNewsList[0] = news.getId();
-            rowNewsList[1] = User.getWriterName(news.getWriterId());
+            rowNewsList[1] = news.getWriterId();
+            rowNewsList[2] = news.getCategoryId();
+            rowNewsList[3] = news.getHeadline();
+            rowNewsList[4] = news.getText();
+            rowNewsList[5] = news.getLikeCount();
+            mdlNewsList.addRow(rowNewsList);
+        }
+    }
+
+    public void loadNewsModel(ArrayList<News> list){
+        DefaultTableModel clearModel = (DefaultTableModel) tblNews.getModel();
+        clearModel.setRowCount(0);
+
+        for(News news: list){
+            rowNewsList[0] = news.getId();
+            rowNewsList[1] = news.getWriterId();
             rowNewsList[2] = news.getCategoryId();
             rowNewsList[3] = news.getHeadline();
             rowNewsList[4] = news.getText();
@@ -431,7 +461,12 @@ public class AdminGUI extends JFrame {
             rowCategoryList[2] = Category.getNewsCount(category.getId());
             mdlCategoryList.addRow(rowCategoryList);
         }
+        cmbCategorySrch.removeAllItems();
+        cmbCategorySrch.addItem("");
+        News.updateCategoryCombo(cmbCategorySrch);
     }
+
+
 
     public static void main(String[] args) {
         Admin ad = new Admin();
