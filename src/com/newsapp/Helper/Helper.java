@@ -65,5 +65,17 @@ public class Helper {
         box.setSelectedItem(fill);
     }
 
+    public static boolean confirm(String str){
+        String message;
+
+        switch(str) {
+            case "sure":
+                message = "Are you sure you want to delete it?";
+                break;
+            default:
+                message=str;
+        }
+        return JOptionPane.showConfirmDialog(null,message,"Confirm",JOptionPane.YES_NO_OPTION) == 0;
+    }
 
 }

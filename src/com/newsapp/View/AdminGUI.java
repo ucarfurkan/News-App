@@ -47,6 +47,8 @@ public class AdminGUI extends JFrame {
     private JScrollPane scrlUsers;
     private JButton btnExit;
     private JLabel lblWelcomed;
+    private JTextField fldNewsIdDelete;
+    private JButton btnNewsDelete;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
     private DefaultTableModel mdlNewsList;
@@ -214,6 +216,52 @@ public class AdminGUI extends JFrame {
                 String query = User.searchQuery(name,uName,userType);
                 ArrayList<User> searchingUser = User.searchUserList(query);
                 loadUserModel(searchingUser);
+        });
+
+        // click news table
+        tblNews.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int row = tblNews.rowAtPoint(e.getPoint());
+
+                if(row >= 0 && row < tblNews.getRowCount()){
+                    tblNews.setRowSelectionInterval(row,row);
+                }
+                else{
+                    tblNews.clearSelection();
+                }
+                int rowIndex = tblNews.getSelectedRow();
+                if(rowIndex != -1){
+                    String newsId = tblNews.getModel().getValueAt(rowIndex,0).toString();
+
+                    Helper.fillField(fldNewsIdDelete,newsId);
+                    btnNewsDelete.setEnabled(true);
+                }
+                else{
+                    Helper.clearFields(fldNewsIdDelete);
+                    btnNewsDelete.setEnabled(false);
+                }
+            }
+        });
+
+        // delete news button
+        btnNewsDelete.addActionListener(e -> {
+            if(Helper.isFieldEmpty(fldNewsIdDelete)){
+                Helper.showMessage("fill");
+            }
+            else{
+                if(Helper.confirm("sure")){
+                    String selectedId = fldNewsIdDelete.getText();
+                    if(News.delete(selectedId)){
+                        Helper.showMessage("done");
+                        Helper.clearFields(fldNewsIdDelete);
+                    }
+                    else{
+                        Helper.showMessage("error");
+                    }
+                    loadNewsModel();
+                }
+            }
         });
     }
 

@@ -2,6 +2,9 @@ package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
 
+import javax.swing.plaf.nimbus.State;
+import javax.xml.crypto.Data;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -84,15 +87,28 @@ public class News {
             ResultSet rs = st.executeQuery(query);
             while(rs.next()){
                 obj = new News();
-                obj.setWriterId(rs.getInt(1));
-                obj.setCategoryId(rs.getInt(5));
-                obj.setHeadline(rs.getString(2));
+                obj.setId(rs.getInt(1));
+                obj.setWriterId(rs.getInt(2));
+                obj.setCategoryId(rs.getInt(6));
+                obj.setHeadline(rs.getString(3));
                 obj.setText(rs.getString(4));
+                obj.setLikeCount(rs.getInt(5));
                 list.add(obj);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static boolean delete(String id){
+        String query = "DELETE FROM news WHERE id="+id+";";
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }
