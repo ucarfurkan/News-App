@@ -236,4 +236,24 @@ public class User {
         }
         return false;
     }
+
+    public static User logIn(String userName, String password){
+        String query = "SELECT * FROM public.user WHERE user_name='"+userName+"' AND pass='"+password+"'";
+        User obj = new User(-1,"F","F","admin","admin");
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUserName(rs.getString("user_name"));
+                obj.setPassword(rs.getString("pass"));
+                obj.setUserType(rs.getString("user_type"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
 }

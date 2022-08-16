@@ -8,8 +8,6 @@ import com.newsapp.Model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -71,9 +69,9 @@ public class AdminGUI extends JFrame {
     private Object[] rowCategoryList;
 
 
-    private final Admin admin;
+    private final User admin;
 
-    public AdminGUI(Admin admin){
+    public AdminGUI(User admin){
         // screen sets
         this.admin = admin;
         add(wrapper);
@@ -84,6 +82,8 @@ public class AdminGUI extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("NEWS");
         setVisible(true);
+
+        lblWelcomed.setText("Welcome, "+ admin.getName());
 
 
         // ModelUserList
@@ -387,6 +387,7 @@ public class AdminGUI extends JFrame {
         // exit button
         btnExit.addActionListener(e -> {
             dispose();
+            LoginGUI loginGUI = new LoginGUI();
         });
     }
 
@@ -464,13 +465,6 @@ public class AdminGUI extends JFrame {
         cmbCategorySrch.removeAllItems();
         cmbCategorySrch.addItem("");
         News.updateCategoryCombo(cmbCategorySrch);
-    }
-
-
-
-    public static void main(String[] args) {
-        Admin ad = new Admin();
-        AdminGUI adminGUI = new AdminGUI(ad);
     }
 
 
