@@ -95,6 +95,8 @@ public class News {
                 obj.setLikeCount(rs.getInt(5));
                 list.add(obj);
             }
+            st.close();
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -105,10 +107,31 @@ public class News {
         String query = "DELETE FROM news WHERE id="+id+";";
         try {
             PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
-            return pr.executeUpdate() != -1;
+            int result = pr.executeUpdate();
+            pr.close();
+            if(result != -1){
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return true;
     }
+
+    public static boolean deleteUsersNews(int writerId){
+        String query = "DELETE FROM news WHERE writer_id="+writerId;
+
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            int result = pr.executeUpdate();
+            pr.close();
+            if(result != -1){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 }

@@ -8,7 +8,6 @@ import com.newsapp.Model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -57,6 +56,13 @@ public class AdminGUI extends JFrame {
     private JTextField fldCategoryName;
     private JButton btnCategoryAdd;
     private JButton btnCategoryDelete;
+    private JPanel pnlNewsDelete;
+    private JPanel pnlNewsSearch;
+    private JButton btnNewsSrch;
+    private JTextField fldWriterNameSrch;
+    private JComboBox cmbCategorySrch;
+    private JTextField fldHeadlineSrch;
+    private JTextField fldTextSrch;
     private DefaultTableModel mdlUserList;
     private Object[] rowUserList;
     private DefaultTableModel mdlNewsList;
@@ -107,7 +113,7 @@ public class AdminGUI extends JFrame {
             }
         };
 
-        Object[] colNewsList = {"ID","Writer ID","Category ID","Headline","Text","Like Count"};
+        Object[] colNewsList = {"ID","Writer Name","Category ID","Headline","Text","Like Count"};
         mdlNewsList.setColumnIdentifiers(colNewsList);
         rowNewsList = new Object[colNewsList.length];
         loadNewsModel();
@@ -148,6 +154,8 @@ public class AdminGUI extends JFrame {
                 if (User.add(u)) {
                     Helper.showMessage("done");
                     loadUserModel();
+                    loadNewsModel();
+                    loadCategoryModel();
                     Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword);
                     cmbUserType.setSelectedItem("");
                 } else {
@@ -212,6 +220,8 @@ public class AdminGUI extends JFrame {
                     Helper.showMessage("usedUname");
                 }
                 loadUserModel();
+                loadNewsModel();
+                loadCategoryModel();
             }
         });
 
@@ -224,17 +234,22 @@ public class AdminGUI extends JFrame {
             else{
                 User u = new User(Integer.valueOf(fldUserId.getText()),fldUserFullName.getText(), fldUserUName.getText(), fldUserPassword.getText(),
                         cmbUserType.getSelectedItem().toString());
-                if(Helper.confirm("sure")){
-                    if(User.delete(u)){
-                        Helper.showMessage("done");
-                        Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword,fldUserId);
-                        cmbUserType.setSelectedItem("");
+                if(Helper.confirm("Are you sure? Every news this user has added will be deleted.")){
+                    if(News.deleteUsersNews(u.getId())){
+                        if(User.delete(u)){
+                            Helper.showMessage("done");
+                            Helper.clearFields(fldUserFullName, fldUserUName, fldUserPassword,fldUserId);
+                            cmbUserType.setSelectedItem("");
+                        }
+                        else{
+                            Helper.showMessage("Username and id do not match. Update first or undo the changes.");
+                        }
                     }
-                    else{
-                        Helper.showMessage("Username and id do not match. Update first or undo the changes.");
-                    }
+
                 }
                 loadUserModel();
+                loadNewsModel();
+                loadCategoryModel();
             }
         });
 
@@ -290,7 +305,72 @@ public class AdminGUI extends JFrame {
                         Helper.showMessage("error");
                     }
                     loadNewsModel();
+                    loadCategoryModel();
                 }
+            }
+        });
+
+        // click category table
+        tblCategories.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int row = tblCategories.rowAtPoint(e.getPoint());
+
+                if(row >= 0 && row < tblCategories.getRowCount()){
+                    tblCategories.setRowSelectionInterval(row,row);
+                }
+                else{
+                    tblCategories.clearSelection();
+                }
+                int rowIndex = tblCategories.getSelectedRow();
+                if(rowIndex != -1){
+                    String categoryId = tblCategories.getModel().getValueAt(rowIndex,0).toString();
+
+                    Helper.fillField(fldCategoryId,categoryId);
+                    btnCategoryDelete.setEnabled(true);
+                }
+                else{
+                    Helper.clearFields(fldCategoryId);
+                    btnCategoryDelete.setEnabled(false);
+                }
+            }
+        });
+
+        // category delete button
+        btnCategoryDelete.addActionListener(e -> {
+            if(Helper.isFieldEmpty(fldCategoryId)){
+                Helper.showMessage("fill");
+            }
+            else{
+                if(Helper.confirm("Are you sure? Every news with this category will lost. Please update them if you don't want to lose.")){
+                    if(Category.deleteNewsInCategory(fldCategoryId.getText()))
+                    if(Category.delete(fldCategoryId.getText())){
+                        Helper.showMessage("done");
+                        Helper.clearFields(fldCategoryId);
+                    }
+                    else{
+                        Helper.showMessage("error");
+                    }
+                    loadNewsModel();
+                    loadCategoryModel();
+                }
+            }
+        });
+
+        // category add button
+        btnCategoryAdd.addActionListener(e -> {
+            if(Helper.isFieldEmpty(fldCategoryName)){
+                Helper.showMessage("fill");
+            }
+            else{
+                if(Category.add(fldCategoryName.getText())){
+                    Helper.showMessage("done");
+                    Helper.clearFields(fldCategoryName);
+                }
+                else{
+                    Helper.showMessage("error");
+                }
+                loadCategoryModel();
             }
         });
     }
@@ -331,7 +411,7 @@ public class AdminGUI extends JFrame {
 
         for(News news : News.getList()){
             rowNewsList[0] = news.getId();
-            rowNewsList[1] = news.getWriterId();
+            rowNewsList[1] = User.getWriterName(news.getWriterId());
             rowNewsList[2] = news.getCategoryId();
             rowNewsList[3] = news.getHeadline();
             rowNewsList[4] = news.getText();
@@ -348,6 +428,7 @@ public class AdminGUI extends JFrame {
         for(Category category : Category.getList()){
             rowCategoryList[0] = category.getId();
             rowCategoryList[1] = category.getName();
+            rowCategoryList[2] = Category.getNewsCount(category.getId());
             mdlCategoryList.addRow(rowCategoryList);
         }
     }

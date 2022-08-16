@@ -91,6 +91,8 @@ public class User {
                 obj.setUserType(rs.getString("user_type"));
                 list.add(obj);
             }
+            st.close();
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -109,7 +111,11 @@ public class User {
                 pr.setString(2,user.getUserName());
                 pr.setString(3,user.getPassword());
                 pr.setString(4,user.getUserType());
-                return pr.executeUpdate() != -1;
+                int result = pr.executeUpdate();
+                pr.close();
+                if(result != -1){
+                    return true;
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -131,7 +137,11 @@ public class User {
                 pr.setString(3,u.getPassword());
                 pr.setString(4,u.getUserType());
                 pr.setInt(5,u.getId());
-                return pr.executeUpdate() != -1;
+                int result = pr.executeUpdate();
+                pr.close();
+                if(result != -1){
+                    return true;
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -146,7 +156,11 @@ public class User {
                 PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
                 pr.setInt(1,u.getId());
                 pr.setString(2,u.getUserName());
-                return pr.executeUpdate() != -1;
+                int result = pr.executeUpdate();
+                pr.close();
+                if(result != -1){
+                    return true;
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -180,6 +194,8 @@ public class User {
                 obj.setUserType(rs.getString("user_type"));
                 userList.add(obj);
             }
+            st.close();
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -196,6 +212,7 @@ public class User {
             if(rs.next()){
                 return false;
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -213,10 +230,34 @@ public class User {
             if(rs.next()){
                 return true;
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static String getWriterName(int writerId){
+        String query = "SELECT * FROM public.user WHERE id="+writerId;
+        User obj;
+        String name = "";
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            if (rs.next()){
+                obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUserName(rs.getString("user_name"));
+                obj.setPassword(rs.getString("pass"));
+                obj.setUserType(rs.getString("user_type"));
+                name = obj.getName();
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
     }
 
 }

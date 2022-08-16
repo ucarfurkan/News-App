@@ -2,6 +2,7 @@ package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -48,9 +49,93 @@ public class Category {
                 obj.setName(rs.getString(2));
                 list.add(obj);
             }
+            rs.close();
+            st.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static boolean delete(String categoryId){
+        String query = "DELETE FROM category WHERE id="+categoryId+";";
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            int result = pr.executeUpdate();
+            pr.close();
+            if(result != -1){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public static boolean add(String categoryName) {
+
+        if(Category.addToEnumCategoryType(categoryName)){
+            String query = "INSERT INTO category (name) VALUES ('"+categoryName+"')";
+
+            try {
+                PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+                int result = pr.executeUpdate();
+                pr.close();
+                if(result != -1){
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    public static boolean addToEnumCategoryType(String categoryName){
+        String query = "ALTER TYPE categoryTypes ADD VALUE IF NOT EXISTS '"+categoryName+"'";
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            int result = pr.executeUpdate();
+            pr.close();
+            if(result != -1){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public static int getNewsCount(int categoryId){
+        String query = "SELECT * FROM news WHERE category_id="+categoryId;
+        int num = 0;
+        try {
+            Statement st = DatabaseConnector.getInstance().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                num++;
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return num;
+    }
+
+    public static boolean deleteNewsInCategory(String categoryId){
+        String query = "DELETE FROM news WHERE category_id="+categoryId;
+
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            int result = pr.executeUpdate();
+            pr.close();
+            if(result != -1){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }
