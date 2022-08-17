@@ -1,13 +1,17 @@
 package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
+import com.newsapp.Model.User;
 
 import javax.swing.*;
 
 public class MemberGUI extends JFrame{
     private JPanel wrapper;
 
-    public MemberGUI(){
+    private final User member;
+
+    public MemberGUI(User member){
+        this.member = member;
         add(wrapper);
         setSize(300,400);
         int x = Helper.screenCenterPoint("x",getSize());

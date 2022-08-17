@@ -1,13 +1,17 @@
 package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
+import com.newsapp.Model.User;
 
 import javax.swing.*;
 
 public class WriterGUI extends JFrame {
     private JPanel wrapper;
 
-    public WriterGUI(){
+    private final User writer;
+
+    public WriterGUI(User writer){
+        this.writer = writer;
         add(wrapper);
         setSize(300,400);
         int x = Helper.screenCenterPoint("x",getSize());

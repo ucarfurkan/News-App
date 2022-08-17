@@ -47,14 +47,19 @@ public class LoginGUI extends JFrame {
                             AdminGUI adminGUI = new AdminGUI(user);
                             break;
                         case "writer":
-                            Helper.showMessage("Welcome Writer");
+                            WriterGUI writerGUI = new WriterGUI(user);
                             break;
                         case "member":
-                            Helper.showMessage("Welcome Member");
+                            MemberGUI memberGUI = new MemberGUI(user);
                             break;
                     }
                 }
             }
+        });
+
+        // sign up button
+        btnSignUp.addActionListener(e -> {
+            SignUpGUI sign = new SignUpGUI();
         });
     }
 
