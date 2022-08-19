@@ -2,6 +2,7 @@ package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
 
+import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,8 +64,8 @@ public class Category {
             PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
             int result = pr.executeUpdate();
             pr.close();
-            if(result != -1){
-                return true;
+            if(result == -1){
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,8 +82,8 @@ public class Category {
                 PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
                 int result = pr.executeUpdate();
                 pr.close();
-                if(result != -1){
-                    return true;
+                if(result == -1){
+                    return false;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -97,8 +98,8 @@ public class Category {
             PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
             int result = pr.executeUpdate();
             pr.close();
-            if(result != -1){
-                return true;
+            if(result == -1){
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -130,8 +131,8 @@ public class Category {
             PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
             int result = pr.executeUpdate();
             pr.close();
-            if(result != -1){
-                return true;
+            if(result == -1){
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -154,5 +155,21 @@ public class Category {
             e.printStackTrace();
         }
         return id;
+    }
+
+    public static void updateCategoryCombo(JComboBox comboBox){
+        String query = "SELECT * FROM category";
+
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            while(rs.next()){
+                comboBox.addItem(rs.getString("name"));
+            }
+            rs.close();
+            pr.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

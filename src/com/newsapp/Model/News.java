@@ -1,11 +1,6 @@
 package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
-import com.newsapp.View.AdminGUI;
-
-import javax.swing.*;
-import javax.swing.plaf.nimbus.State;
-import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -111,8 +106,8 @@ public class News {
             PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
             int result = pr.executeUpdate();
             pr.close();
-            if(result != -1){
-                return true;
+            if(result == -1){
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,8 +122,8 @@ public class News {
             PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
             int result = pr.executeUpdate();
             pr.close();
-            if(result != -1){
-                return true;
+            if(result == -1){
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,21 +131,6 @@ public class News {
         return true;
     }
 
-    public static void updateCategoryCombo(JComboBox comboBox){
-        String query = "SELECT * FROM category";
-
-        try {
-            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
-            ResultSet rs = pr.executeQuery();
-            while(rs.next()){
-                comboBox.addItem(rs.getString("name"));
-            }
-            rs.close();
-            pr.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static String searchQuery(String writerId,String category, String headline, String text){
         String query = "SELECT * FROM news WHERE headline LIKE '%{{headline}}%' AND text LIKE '%{{text}}%'";

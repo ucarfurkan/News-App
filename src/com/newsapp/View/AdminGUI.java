@@ -463,7 +463,9 @@ public class AdminGUI extends JFrame {
         }
         cmbCategorySrch.removeAllItems();
         cmbCategorySrch.addItem("");
-        News.updateCategoryCombo(cmbCategorySrch);
+
+
+        Category.updateCategoryCombo(cmbCategorySrch);
     }
 
 

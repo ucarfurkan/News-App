@@ -1,7 +1,9 @@
 package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
+import com.newsapp.Model.Category;
 import com.newsapp.Model.User;
+import com.newsapp.Model.Writer;
 
 import javax.swing.*;
 
@@ -15,7 +17,7 @@ public class WriterGUI extends JFrame {
     private JPanel pnlPostedNews;
     private JTextField fldNewsHeadline;
     private JTextArea areaNewsText;
-    private JComboBox comboBox1;
+    private JComboBox cmbCategoryList;
     private JButton btnPostNewNews;
     private JScrollPane scrlText;
 
@@ -31,10 +33,28 @@ public class WriterGUI extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("NEWS APP");
         setVisible(true);
+        lblWelcome.setText("Welcome, "+writer.getName());
+
+        cmbCategoryList.addItem("");
+        Category.updateCategoryCombo(cmbCategoryList);
 
 
+        btnPostNewNews.addActionListener(e -> {
+            String headline = fldNewsHeadline.getText();
+            String text = areaNewsText.getText();
+            int categoryId = Category.getCategoryId(cmbCategoryList.getSelectedItem().toString());
 
+            if(Helper.isFieldEmpty(fldNewsHeadline) || Helper.isFieldEmpty(areaNewsText) || cmbCategoryList.getSelectedItem().toString() == ""){
+                Helper.showMessage("fill");
+            }
+            else{
+                if(Writer.postNews(writer.getId(), headline,text,categoryId)){
+                    Helper.showMessage("done");
+                    Helper.clearFields(fldNewsHeadline,areaNewsText,cmbCategoryList);
 
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

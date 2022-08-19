@@ -2,6 +2,7 @@ package com.newsapp.Helper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 public class Helper {
@@ -30,11 +31,30 @@ public class Helper {
         }
     }
 
-    public static void clearFields(JTextField... args){
-        for(JTextField field: args){
-            field.setText("");
+    public static boolean isFieldEmpty(JTextArea area){
+        if(area.getText().length()==0){
+            return true;
+        }
+        else{
+            return false;
         }
     }
+
+    public static void clearFields(JComponent... args){
+        for(Object obj : args){
+            if(obj instanceof JTextField){
+                ((JTextField) obj).setText("");
+            }
+            else if(obj instanceof JTextArea){
+                ((JTextArea) obj).setText("");
+            }
+            else if(obj instanceof JComboBox){
+                ((JComboBox<?>) obj).setSelectedItem("");
+            }
+        }
+
+    }
+
 
     public static void showMessage(String message){
         String msg = "";

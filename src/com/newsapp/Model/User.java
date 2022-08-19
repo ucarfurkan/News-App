@@ -1,9 +1,6 @@
 package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
-import com.newsapp.Helper.Helper;
-
-import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -113,8 +110,8 @@ public class User {
                 pr.setString(4,user.getUserType());
                 int result = pr.executeUpdate();
                 pr.close();
-                if(result != -1){
-                    return true;
+                if(result == -1){
+                    return false;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -139,8 +136,8 @@ public class User {
                 pr.setInt(5,u.getId());
                 int result = pr.executeUpdate();
                 pr.close();
-                if(result != -1){
-                    return true;
+                if(result == -1){
+                    return false;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -158,8 +155,8 @@ public class User {
                 pr.setString(2,u.getUserName());
                 int result = pr.executeUpdate();
                 pr.close();
-                if(result != -1){
-                    return true;
+                if(result == -1){
+                    return false;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
