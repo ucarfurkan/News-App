@@ -162,7 +162,7 @@ public class User {
                 e.printStackTrace();
             }
         }
-        return false;
+        return true;
     }
 
     public static String searchQuery(String name, String uname, String user_type){

@@ -6,6 +6,8 @@ import com.newsapp.Model.User;
 import com.newsapp.Model.Writer;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class WriterGUI extends JFrame {
     private JPanel wrapper;
@@ -38,7 +40,7 @@ public class WriterGUI extends JFrame {
         cmbCategoryList.addItem("");
         Category.updateCategoryCombo(cmbCategoryList);
 
-
+        // news post button
         btnPostNewNews.addActionListener(e -> {
             String headline = fldNewsHeadline.getText();
             String text = areaNewsText.getText();
@@ -54,6 +56,12 @@ public class WriterGUI extends JFrame {
 
                 }
             }
+        });
+
+        // exit button
+        btnExit.addActionListener(e -> {
+            dispose();
+            LoginGUI loginGUI = new LoginGUI();
         });
     }
 
