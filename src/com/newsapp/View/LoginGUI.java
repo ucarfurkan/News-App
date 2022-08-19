@@ -1,12 +1,9 @@
 package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
-import com.newsapp.Model.Admin;
 import com.newsapp.Model.User;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginGUI extends JFrame {
     private JPanel wrapper;

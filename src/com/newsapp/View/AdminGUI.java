@@ -1,7 +1,6 @@
 package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
-import com.newsapp.Model.Admin;
 import com.newsapp.Model.Category;
 import com.newsapp.Model.News;
 import com.newsapp.Model.User;
