@@ -18,7 +18,6 @@ public class SignUpGUI extends JFrame{
 
     public SignUpGUI(){
         add(wrapper);
-        add(wrapper);
         setSize(250,300);
         int x = Helper.screenCenterPoint("x",getSize());
         int y = Helper.screenCenterPoint("y",getSize());

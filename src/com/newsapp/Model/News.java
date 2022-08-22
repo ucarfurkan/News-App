@@ -1,6 +1,8 @@
 package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
+
+import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -169,6 +171,44 @@ public class News {
             e.printStackTrace();
         }
         return newsList;
+    }
+
+    public static News getSelectedNews(String id){
+        News obj=null;
+        String query = "SELECT * FROM news WHERE id="+id;
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                obj = new News();
+                obj.setId(rs.getInt(1));
+                obj.setWriterId(rs.getInt(2));
+                obj.setHeadline(rs.getString(3));
+                obj.setText(rs.getString(4));
+                obj.setLikeCount(rs.getInt(5));
+                obj.setCategoryId(rs.getInt(6));
+            }
+            rs.close();
+            pr.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
+    public static boolean update(String id, String headline, String text, String categoryId){
+        String query = "UPDATE news SET headline='"+headline+"', text='"+text+"', category_id="+categoryId+" WHERE id="+id;
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            int result = pr.executeUpdate();
+            pr.close();
+            if(result == -1){
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
 }

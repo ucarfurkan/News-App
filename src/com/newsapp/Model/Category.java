@@ -157,6 +157,23 @@ public class Category {
         return id;
     }
 
+    public static String getCategoryName(String categoryId){
+        String query = "SELECT * FROM category WHERE id='"+categoryId+"'";
+        String name = "";
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                name = rs.getString("name");
+            }
+            rs.close();
+            pr.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
     public static void updateCategoryCombo(JComboBox comboBox){
         String query = "SELECT * FROM category";
 

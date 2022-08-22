@@ -94,6 +94,7 @@ public class WriterGUI extends JFrame {
         tblWritersNews.getColumnModel().getColumn(1).setMaxWidth(75);
         tblWritersNews.getColumnModel().getColumn(4).setMaxWidth(75);
 
+
         // click news table
         tblWritersNews.addMouseListener(new MouseAdapter() {
             @Override
@@ -118,6 +119,18 @@ public class WriterGUI extends JFrame {
                     btnPostedNewsUpdate.setEnabled(false);
                 }
             }
+        });
+
+        // news update
+        btnPostedNewsUpdate.addActionListener(e -> {
+            String id = fldSelectedId.getText();
+            UpdateNewsGUI updateNewsGUI = new UpdateNewsGUI(id);
+            updateNewsGUI.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadNewsModel();
+                }
+            });
         });
     }
 
