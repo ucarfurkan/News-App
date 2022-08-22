@@ -29,6 +29,7 @@ public class WriterGUI extends JFrame {
     private JTable tblWritersNews;
     private JButton btnPostedNewsUpdate;
     private JTextField fldSelectedId;
+    private JButton btnPostedNewsDelete;
     private DefaultTableModel mdlWritersNews;
     Object[] rowWritersNews;
 
@@ -113,10 +114,12 @@ public class WriterGUI extends JFrame {
 
                     Helper.fillField(fldSelectedId,newsId);
                     btnPostedNewsUpdate.setEnabled(true);
+                    btnPostedNewsDelete.setEnabled(true);
                 }
                 else{
                     Helper.clearFields(fldSelectedId);
                     btnPostedNewsUpdate.setEnabled(false);
+                    btnPostedNewsDelete.setEnabled(false);
                 }
             }
         });
@@ -131,6 +134,26 @@ public class WriterGUI extends JFrame {
                     loadNewsModel();
                 }
             });
+        });
+
+        // news delete
+        btnPostedNewsDelete.addActionListener(e -> {
+            String id = fldSelectedId.getText();
+            if(Helper.isFieldEmpty(fldSelectedId)){
+                Helper.showMessage("fill");
+            }
+            else{
+                if(Helper.confirm("sure")){
+                    if(News.delete(id)){
+                        Helper.showMessage("done");
+                        Helper.clearFields(fldSelectedId);
+                    }
+                    else{
+                        Helper.showMessage("error");
+                    }
+                    loadNewsModel();
+                }
+            }
         });
     }
 
