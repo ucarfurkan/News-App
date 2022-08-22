@@ -3,7 +3,9 @@ package com.newsapp.Model;
 import com.newsapp.Helper.DatabaseConnector;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Writer extends User {
     private int id;
@@ -86,5 +88,28 @@ public class Writer extends User {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public static ArrayList<News> getList(int id){
+        String query = "SELECT * FROM news WHERE writer_id="+id;
+        News obj;
+        ArrayList<News> list = new ArrayList<>();
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            while(rs.next()){
+                obj = new News();
+                obj.setId(rs.getInt(1));
+                obj.setWriterId(id);
+                obj.setHeadline(rs.getString(3));
+                obj.setText(rs.getString(4));
+                obj.setLikeCount(rs.getInt(5));
+                obj.setCategoryId(rs.getInt(6));
+                list.add(obj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
