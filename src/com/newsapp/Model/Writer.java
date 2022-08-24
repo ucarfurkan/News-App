@@ -112,4 +112,8 @@ public class Writer extends User {
         }
         return list;
     }
+
+    public static String getWritersName(String id){
+        return "a";
+    }
 }

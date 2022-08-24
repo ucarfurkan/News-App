@@ -171,12 +171,4 @@ public class WriterGUI extends JFrame {
         }
 
     }
-
-
-    public static void main(String[] args) {
-        User writer = new User("Writer Name","writerUname","Password","writer");
-        WriterGUI writerGUI = new WriterGUI(writer);
-    }
-
-
 }
