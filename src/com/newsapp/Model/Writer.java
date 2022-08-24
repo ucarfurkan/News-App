@@ -2,6 +2,7 @@ package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
 
+import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -107,13 +108,45 @@ public class Writer extends User {
                 obj.setCategoryId(rs.getInt(6));
                 list.add(obj);
             }
+            rs.close();
+            pr.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
 
-    public static String getWritersName(String id){
-        return "a";
+    public static String getWritersName(int id){
+        String query = "SELECT * FROM public.user WHERE id="+id+";";
+        String name = "";
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                name = rs.getString(2);
+            }
+            rs.close();
+            pr.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+    public static String getWriterId(String name){
+        String query = "SELECT * FROM public.user WHERE name="+name+";";
+        String id = "";
+        try {
+            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+            ResultSet rs = pr.executeQuery();
+            if(rs.next()){
+                id = String.valueOf(rs.getInt(1));
+            }
+            rs.close();
+            pr.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
 }

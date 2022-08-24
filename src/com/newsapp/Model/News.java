@@ -78,7 +78,7 @@ public class News {
     }
 
     public static ArrayList<News> getList(){
-        String query = "SELECT * FROM news";
+        String query = "SELECT * FROM news ORDER BY id ASC";
         ArrayList<News> list = new ArrayList<>();
         News obj;
         try {
@@ -136,14 +136,31 @@ public class News {
 
     public static String searchQuery(String writerId,String category, String headline, String text){
         String query = "SELECT * FROM news WHERE headline LIKE '%{{headline}}%' AND text LIKE '%{{text}}%'";
-        query = query.replace("{{writerId}}",writerId);
         query = query.replace("{{headline}}",headline);
         query = query.replace("{{text}}",text);
         if(!category.isEmpty()){
             int categoryId = Category.getCategoryId(category);
-            query += " AND category_id="+categoryId;
+            if(categoryId != -1){
+                query += " AND category_id="+categoryId;
+            }
+
         }
         if(!writerId.isEmpty()){
+            query += " AND writer_id="+writerId;
+        }
+        return query;
+    }
+
+    public static String searchQueryWithName(String writerId,String category, String headline, String text){
+        String query = "SELECT * FROM news WHERE headline LIKE '%{{headline}}%' AND text LIKE '%{{text}}%'";
+        query = query.replace("{{headline}}",headline);
+        query = query.replace("{{text}}",text);
+        System.out.println(writerId);
+        if(!category.isEmpty()){
+            int categoryId = Category.getCategoryId(category);
+            query += " AND category_id="+categoryId;
+        }
+        if(!writerId.isEmpty() || writerId != "0"){
             query += " AND writer_id="+writerId;
         }
         return query;

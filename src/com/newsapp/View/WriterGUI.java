@@ -8,9 +8,6 @@ import com.newsapp.Model.Writer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.awt.event.*;
 
 public class WriterGUI extends JFrame {

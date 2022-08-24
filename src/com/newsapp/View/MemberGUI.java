@@ -4,10 +4,16 @@ import com.newsapp.Helper.Helper;
 import com.newsapp.Model.Category;
 import com.newsapp.Model.News;
 import com.newsapp.Model.User;
+import com.newsapp.Model.Writer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Member;
+import java.util.ArrayList;
 
 public class MemberGUI extends JFrame{
     private JPanel wrapper;
@@ -21,8 +27,10 @@ public class MemberGUI extends JFrame{
     private JTextField fldSearchWriter;
     private JComboBox cmbSearchCategory;
     private JTable tblNews;
+    private JPanel pnlTop;
     private DefaultTableModel mdlNews;
     private Object[] rowNews;
+    JButton button = new JButton();
 
     private final User member;
 
@@ -48,17 +56,66 @@ public class MemberGUI extends JFrame{
                 return false;
             }
         };
-        Object[] colNewsList = {"Headline","Text","Writer","Category","Read","Like"};
+        Object[] colNewsList = {"Headline","Text","Writer & ID","Category",""};
         mdlNews.setColumnIdentifiers(colNewsList);
         rowNews = new Object[colNewsList.length];
         loadNewsModel();
         tblNews.setModel(mdlNews);
         tblNews.getTableHeader().setReorderingAllowed(false);
         Helper.centerCells(tblNews);
-        tblNews.getColumnModel().getColumn(3).setMaxWidth(200);
-        tblNews.getColumnModel().getColumn(3).setMaxWidth(75);
+        tblNews.setRowHeight(20);
+        tblNews.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+        tblNews.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox()));
         tblNews.getColumnModel().getColumn(4).setMaxWidth(75);
-        tblNews.getColumnModel().getColumn(5).setMaxWidth(75);
+
+        button.addActionListener(
+                event -> System.out.println("read")
+        );
+
+        // news search button
+        btnSearch.addActionListener(e -> {
+
+            String headline = fldSearchHeadline.getText();
+            String text = fldSearchText.getText();
+            String writer = fldSearchWriter.getText();
+            String category = cmbSearchCategory.getSelectedItem().toString();
+            String query = News.searchQuery(writer,category,headline,text);
+            ArrayList<News> searchingNews = News.searchNewsList(query);
+            loadNewsModel(searchingNews);
+        });
+    }
+
+
+    class ButtonRenderer extends JButton implements TableCellRenderer
+    {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "Read" : value.toString());
+            return this;
+        }
+    }
+    class ButtonEditor extends DefaultCellEditor
+    {
+        private String label;
+
+        public ButtonEditor(JCheckBox checkBox)
+        {
+            super(checkBox);
+        }
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                                                     boolean isSelected, int row, int column)
+        {
+            label = (value == null) ? "Read" : value.toString();
+            button.setText(label);
+            return button;
+        }
+        public Object getCellEditorValue()
+        {
+            return new String(label);
+        }
     }
 
     public void loadNewsModel(){
@@ -68,7 +125,20 @@ public class MemberGUI extends JFrame{
         for(News news : News.getList()){
             rowNews[0] = news.getHeadline();
             rowNews[1] = news.getText();
-            rowNews[2] = news.getWriterId();
+            rowNews[2] = Writer.getWritersName(news.getWriterId()) + " | " + news.getWriterId();
+            rowNews[3] = Category.getCategoryName(String.valueOf(news.getCategoryId()));
+            mdlNews.addRow(rowNews);
+        }
+    }
+
+    public void loadNewsModel(ArrayList<News> list){
+        DefaultTableModel clearModel = (DefaultTableModel) tblNews.getModel();
+        clearModel.setRowCount(0);
+
+        for(News news: list){
+            rowNews[0] = news.getHeadline();
+            rowNews[1] = news.getText();
+            rowNews[2] = Writer.getWritersName(news.getWriterId());
             rowNews[3] = Category.getCategoryName(String.valueOf(news.getCategoryId()));
             mdlNews.addRow(rowNews);
         }

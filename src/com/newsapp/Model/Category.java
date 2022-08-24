@@ -142,15 +142,17 @@ public class Category {
 
     public static int getCategoryId(String categoryName){
         String query = "SELECT * FROM category WHERE name='"+categoryName+"'";
-        int id=0;
+        int id=-1;
         try {
-            PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
-            ResultSet rs = pr.executeQuery();
-            if(rs.next()){
-                id = rs.getInt("id");
+            if(categoryName != " "){
+                PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
+                ResultSet rs = pr.executeQuery();
+                if(rs.next()){
+                    id = rs.getInt("id");
+                }
+                rs.close();
+                pr.close();
             }
-            rs.close();
-            pr.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
