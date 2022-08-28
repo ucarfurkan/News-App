@@ -10,8 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
 
@@ -68,9 +67,28 @@ public class MemberGUI extends JFrame{
         tblNews.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox()));
         tblNews.getColumnModel().getColumn(4).setMaxWidth(75);
 
-        button.addActionListener(
-                event -> System.out.println("read")
-        );
+        tblNews.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int row = tblNews.rowAtPoint(e.getPoint());
+                if(row >= 0 && row < tblNews.getRowCount()){
+                    tblNews.setRowSelectionInterval(row,row);
+                }
+                else{
+                    tblNews.clearSelection();
+                }
+                int rowIndex = tblNews.getSelectedRow();
+                int column = tblNews.columnAtPoint(e.getPoint());
+                if(rowIndex != -1 && column == 4){
+                    String headline = tblNews.getModel().getValueAt(rowIndex,0).toString();
+                    String text = tblNews.getModel().getValueAt(rowIndex,1).toString();
+                    String name = tblNews.getModel().getValueAt(rowIndex,2).toString();
+
+                    ReadGUI readGUI = new ReadGUI(headline,text,name);
+                }
+            }
+        });
+
 
         // news search button
         btnSearch.addActionListener(e -> {
