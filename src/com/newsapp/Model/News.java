@@ -15,18 +15,16 @@ public class News {
     private int categoryId;
     private String headline;
     private String text;
-    private int likeCount;
 
-    public News() {
-        this.likeCount = 0;
+
+    public News(){
+
     }
-
-    public News(int writerId, int categoryId, String headline, String text, int likeCount) {
+    public News(int writerId, int categoryId, String headline, String text) {
         this.writerId = writerId;
         this.categoryId = categoryId;
         this.headline = headline;
         this.text = text;
-        this.likeCount = 0;
     }
 
     public int getId() {
@@ -69,13 +67,6 @@ public class News {
         this.text = text;
     }
 
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
 
     public static ArrayList<News> getList(){
         String query = "SELECT * FROM news ORDER BY id ASC";
@@ -88,10 +79,9 @@ public class News {
                 obj = new News();
                 obj.setId(rs.getInt(1));
                 obj.setWriterId(rs.getInt(2));
-                obj.setCategoryId(rs.getInt(6));
+                obj.setCategoryId(rs.getInt(5));
                 obj.setHeadline(rs.getString(3));
                 obj.setText(rs.getString(4));
-                obj.setLikeCount(rs.getInt(5));
                 list.add(obj);
             }
             st.close();
@@ -139,11 +129,12 @@ public class News {
         query = query.replace("{{headline}}",headline);
         query = query.replace("{{text}}",text);
         if(!category.isEmpty()){
-            int categoryId = Category.getCategoryId(category);
-            if(categoryId != -1){
-                query += " AND category_id="+categoryId;
+            if(!category.equals(" ")){
+                int categoryId = Category.getCategoryId(category);
+                if(categoryId != -1){
+                    query += " AND category_id="+categoryId;
+                }
             }
-
         }
         if(!writerId.isEmpty()){
             query += " AND writer_id="+writerId;
@@ -179,7 +170,6 @@ public class News {
                 obj.setCategoryId(rs.getInt("category_id"));
                 obj.setHeadline(rs.getString("headline"));
                 obj.setText(rs.getString("text"));
-                obj.setLikeCount(rs.getInt("like_count"));
                 newsList.add(obj);
             }
             st.close();
@@ -202,8 +192,7 @@ public class News {
                 obj.setWriterId(rs.getInt(2));
                 obj.setHeadline(rs.getString(3));
                 obj.setText(rs.getString(4));
-                obj.setLikeCount(rs.getInt(5));
-                obj.setCategoryId(rs.getInt(6));
+                obj.setCategoryId(rs.getInt(5));
             }
             rs.close();
             pr.close();

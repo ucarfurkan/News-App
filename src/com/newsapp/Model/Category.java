@@ -144,7 +144,7 @@ public class Category {
         String query = "SELECT * FROM category WHERE name='"+categoryName+"'";
         int id=-1;
         try {
-            if(categoryName != " "){
+            if(!categoryName.equals("") || !categoryName.equals(" ")){
                 PreparedStatement pr = DatabaseConnector.getInstance().prepareStatement(query);
                 ResultSet rs = pr.executeQuery();
                 if(rs.next()){

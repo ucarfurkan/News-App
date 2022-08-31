@@ -210,6 +210,7 @@ public class User {
                 return false;
             }
             rs.close();
+            pr.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -227,6 +228,7 @@ public class User {
             if(rs.next()){
                 return true;
             }
+            pr.close();
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -248,6 +250,8 @@ public class User {
                 obj.setPassword(rs.getString("pass"));
                 obj.setUserType(rs.getString("user_type"));
             }
+            pr.close();
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

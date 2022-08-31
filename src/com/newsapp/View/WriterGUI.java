@@ -52,8 +52,7 @@ public class WriterGUI extends JFrame {
             String headline = fldNewsHeadline.getText();
             String text = areaNewsText.getText();
             int categoryId = Category.getCategoryId(cmbCategoryList.getSelectedItem().toString());
-
-            if(Helper.isFieldEmpty(fldNewsHeadline) || Helper.isFieldEmpty(areaNewsText) || cmbCategoryList.getSelectedItem().toString() == ""){
+            if(Helper.isFieldEmpty(fldNewsHeadline) || Helper.isFieldEmpty(areaNewsText) || cmbCategoryList.getSelectedItem().toString().equals("")){
                 Helper.showMessage("fill");
             }
             else{
@@ -81,7 +80,7 @@ public class WriterGUI extends JFrame {
             }
         };
 
-        Object[] colWritersList = {"ID","Category ID","Headline","Text","Like Count"};
+        Object[] colWritersList = {"ID","Category ID","Headline","Text"};
         mdlWritersNews.setColumnIdentifiers(colWritersList);
         rowWritersNews = new Object[colWritersList.length];
         loadNewsModel();
@@ -90,7 +89,6 @@ public class WriterGUI extends JFrame {
         Helper.centerCells(tblWritersNews);;
         tblWritersNews.getColumnModel().getColumn(0).setMaxWidth(75);
         tblWritersNews.getColumnModel().getColumn(1).setMaxWidth(75);
-        tblWritersNews.getColumnModel().getColumn(4).setMaxWidth(75);
 
 
         // click news table
@@ -163,7 +161,6 @@ public class WriterGUI extends JFrame {
             rowWritersNews[1] = writerNews.getCategoryId();
             rowWritersNews[2] = writerNews.getHeadline();
             rowWritersNews[3] = writerNews.getText();
-            rowWritersNews[4] = writerNews.getLikeCount();
             mdlWritersNews.addRow(rowWritersNews);
         }
 

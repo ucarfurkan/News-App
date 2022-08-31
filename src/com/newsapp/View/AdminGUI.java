@@ -1,6 +1,7 @@
 package com.newsapp.View;
 
 import com.newsapp.Helper.Helper;
+import com.newsapp.Model.Admin;
 import com.newsapp.Model.Category;
 import com.newsapp.Model.News;
 import com.newsapp.Model.User;
@@ -111,7 +112,7 @@ public class AdminGUI extends JFrame {
             }
         };
 
-        Object[] colNewsList = {"ID","Writer ID","Category ID","Headline","Text","Like Count"};
+        Object[] colNewsList = {"ID","Writer ID","Category ID","Headline","Text"};
         mdlNewsList.setColumnIdentifiers(colNewsList);
         rowNewsList = new Object[colNewsList.length];
         loadNewsModel();
@@ -120,7 +121,6 @@ public class AdminGUI extends JFrame {
         tblNews.getColumnModel().getColumn(0).setMaxWidth(75);
         tblNews.getColumnModel().getColumn(1).setMaxWidth(75);
         tblNews.getColumnModel().getColumn(2).setMaxWidth(75);
-        tblNews.getColumnModel().getColumn(5).setMaxWidth(75);
         Helper.centerCells(tblNews);
 
         // ModelCategoryList
@@ -430,7 +430,6 @@ public class AdminGUI extends JFrame {
             rowNewsList[2] = news.getCategoryId();
             rowNewsList[3] = news.getHeadline();
             rowNewsList[4] = news.getText();
-            rowNewsList[5] = news.getLikeCount();
             mdlNewsList.addRow(rowNewsList);
         }
     }
@@ -445,7 +444,6 @@ public class AdminGUI extends JFrame {
             rowNewsList[2] = news.getCategoryId();
             rowNewsList[3] = news.getHeadline();
             rowNewsList[4] = news.getText();
-            rowNewsList[5] = news.getLikeCount();
             mdlNewsList.addRow(rowNewsList);
         }
     }
@@ -468,5 +466,9 @@ public class AdminGUI extends JFrame {
         Category.updateCategoryCombo(cmbCategorySrch);
     }
 
+    public static void main(String[] args) {
+        Admin admin = new Admin();
+        AdminGUI adminGUI = new AdminGUI(admin);
+    }
 
 }

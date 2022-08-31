@@ -2,7 +2,7 @@ package com.newsapp.Model;
 
 import com.newsapp.Helper.DatabaseConnector;
 
-import javax.xml.transform.Result;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -104,8 +104,7 @@ public class Writer extends User {
                 obj.setWriterId(id);
                 obj.setHeadline(rs.getString(3));
                 obj.setText(rs.getString(4));
-                obj.setLikeCount(rs.getInt(5));
-                obj.setCategoryId(rs.getInt(6));
+                obj.setCategoryId(rs.getInt(5));
                 list.add(obj);
             }
             rs.close();

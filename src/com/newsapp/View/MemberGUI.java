@@ -44,6 +44,7 @@ public class MemberGUI extends JFrame{
         setTitle("NEWS APP");
         setVisible(true);
 
+        lblWelcome.setText("Welcome," + member.getName());
         cmbSearchCategory.addItem(" ");
         Category.updateCategoryCombo(cmbSearchCategory);
 
@@ -101,6 +102,11 @@ public class MemberGUI extends JFrame{
             ArrayList<News> searchingNews = News.searchNewsList(query);
             loadNewsModel(searchingNews);
         });
+
+        btnExit.addActionListener(e -> {
+            dispose();
+            LoginGUI loginGUI = new LoginGUI();
+        });
     }
 
 
@@ -156,14 +162,9 @@ public class MemberGUI extends JFrame{
         for(News news: list){
             rowNews[0] = news.getHeadline();
             rowNews[1] = news.getText();
-            rowNews[2] = Writer.getWritersName(news.getWriterId());
+            rowNews[2] = Writer.getWritersName(news.getWriterId()) + " | " + news.getWriterId();
             rowNews[3] = Category.getCategoryName(String.valueOf(news.getCategoryId()));
             mdlNews.addRow(rowNews);
         }
-    }
-
-    public static void main(String[] args) {
-        User user = new User();
-        MemberGUI memberGUI = new MemberGUI(user);
     }
 }
