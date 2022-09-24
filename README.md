@@ -1,10 +1,10 @@
 # News App
  
-News App is a simulation of a desktop application which you can read news.
+News App is a simulation of a desktop application in which you can read the news.
 
 There is 3 user type in this application. Admin, Writer and Member.
 
-Firstly, you will see an Sign In screen. You can Sign In here with username and password. If you don't have an account, you can create one from "Sign Up" button. If you sign up, your account will be a "member" type user. Users are connected with database in "user" table, it will be checked from there. According to the login information you have entered, you will be directed to the screen of which user type the account is.
+Firstly, you will see a Sign In screen. You can Sign In here with your username and password. If you don't have an account, you can create one from the "Sign Up" button. If you sign up, your account will be a "member" type of user. Users are connected with the database in the "user" table, it will be checked from there. According to the login information you have entered, you will be directed to the screen of which user type the account is.
 
 ## If you are Admin
 
