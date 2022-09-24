@@ -1,6 +1,6 @@
 # News App
  
-News App is a simulation of a desktop add which you can read news.
+News App is a simulation of a desktop application which you can read news.
 
 There is 3 user type in this application. Admin, Writer and Member.
 
