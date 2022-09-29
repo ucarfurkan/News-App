@@ -14,9 +14,17 @@ If you are logged in as admin, you will see an interface with 3 different tabs, 
 You can see all the users here. You can add, update or delete a user. If you delete a user, every news added by that user will be deleted as well. You can search for a user with a name, username, or user type in the search panel.
 
 ### News Tab
-You can see all the news added by writers here. You can only delete them. You can search for a new with a Writer ID, category, headline or text in the search panel.
+You can see all the news added by writers here. You can only delete them. You can search for a news with a Writer ID, category, headline or text in the search panel.
 
 ### Categories Tab
 You can see all the category types here. You can add or delete a category. If you delete a category, every news belong to that category will be deleted as well, and you will see a warning about it. Categories are enum, so every news must belong to one of the categories which is in here.
 
 ## If you are Writer
+
+If you are logged in as writer, you will see an interface with 3 different tabs, "Add News" and "My Posted News".
+
+### Add News Tab
+You can add a news in here. Headline, Text and Category fields are necessery to add a news.
+
+### My Posted News Tab
+You can see all the news you posted before in here. You can update or delete them.
